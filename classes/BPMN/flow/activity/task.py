@@ -1,7 +1,8 @@
 from classes.BPMN.flow.activity.activity import Activity
+from constant.activity_type import ActivityType
 
 
 class Task(Activity):
 
-    def __init__(self, element_id, name, activity_type, start_quantity):
-        super().__init__(element_id, name, activity_type, start_quantity)
+    def __init__(self, xml_element, start_quantity):
+        super().__init__(xml_element, ActivityType.TASK, start_quantity)
