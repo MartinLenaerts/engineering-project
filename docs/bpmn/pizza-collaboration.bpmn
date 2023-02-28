@@ -72,7 +72,7 @@
             <semantic:incoming>_6-125</semantic:incoming>
             <semantic:outgoing>_6-178</semantic:outgoing>
         </semantic:task>
-        <semantic:task completionQuantity="1" isForCompensation="false" startQuantity="1" name="Order a pizza" id="_6-127">
+        <semantic:task completionQuantity="1" isForCompensation="false" startQuantity="1" name="📁 a pizza" id="_6-127">
             <semantic:incoming>_6-178</semantic:incoming>
             <semantic:outgoing>_6-420</semantic:outgoing>
         </semantic:task>
