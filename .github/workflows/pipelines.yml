@@ -14,8 +14,9 @@ jobs:
         python-version: 3.7
     - name: Install Dependencies
       run: |
+        apt-get install graphviz
         pip install mypy
         pip install pydot
     - name: mypy
       run: |
-        mypy *.py
+        mypy classes/**/*.py
