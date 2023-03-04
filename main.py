@@ -126,7 +126,7 @@ def bpmn_to_petri(bpmn):
     print(bpmn.get_start_event())
     # TODO : get all startEvent and create a place
 
-    # TODO : create transition for each task and event (xor)
+    # TODO : create transition for each task and event (xor ...)
 
     # TODO : create arc between transition and places
 
