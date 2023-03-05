@@ -1,4 +1,3 @@
-
 def get_name(xml_element):
     return xml_element.attrib.get('name')
 

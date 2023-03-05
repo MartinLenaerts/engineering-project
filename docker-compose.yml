@@ -1,0 +1,8 @@
+version: "3.8"
+
+services:
+  script:
+    build: .
+    volumes:
+      - .:/home/app
+    container_name: engineering_project

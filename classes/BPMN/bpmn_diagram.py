@@ -1,3 +1,19 @@
+from classes.BPMN.connecting.connection_flow import Connection
+from classes.BPMN.flow.flow_object import FlowObject
+
+
+def print_element(element):
+    res = str(element.name) + " [" + str(element.element_id) + "] "
+
+    if isinstance(element, FlowObject):
+        res += " (in: " + str(len(element.incoming_elements)) + " , out: " + str(len(element.outgoing_elements)) + ")"
+
+    if isinstance(element, Connection):
+        res += "Connection (in: " + str(element.source.element_id) + " , out: " + str(element.target.element_id) + ")"
+
+    return res
+
+
 class BpmnDiagram:
     def __init__(self):
         self.processes = []
@@ -32,10 +48,11 @@ class BpmnDiagram:
         for process in self.processes:
             res += ("---|" + str(process.name) + "\n")
             for element in process.elements:
-                res += ("---|-----" + str(element.name) + "\n")
+                res += ("---|-----" + print_element(element) + "\n")
             for lane in process.lanes:
                 res += ("---|----|" + str(lane.name) + "\n")
                 for element in lane.elements:
-                    res += ("--------|----" + str(element.name) + "\n")
+                    res += ("--------|----" + print_element(element) + "\n")
 
         return res
+

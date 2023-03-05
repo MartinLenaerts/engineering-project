@@ -6,3 +6,6 @@ class Connection(BPMNElement):
         super().__init__(xml_element)
         self.source = source
         self.target = target
+
+        target.append_incoming_element(self)
+        source.append_outgoing_element(self)

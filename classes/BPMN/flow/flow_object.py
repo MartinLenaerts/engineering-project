@@ -17,3 +17,9 @@ class FlowObject(BPMNElement):
 
             if xml_child.tag == BpmnXmlElement.INCOMING.value:
                 self.outgoing_ids.append(xml_child.text)
+
+    def append_incoming_element(self, element):
+        self.incoming_elements.append(element)
+
+    def append_outgoing_element(self, element):
+        self.outgoing_elements.append(element)
