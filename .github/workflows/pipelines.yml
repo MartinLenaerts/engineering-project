@@ -3,7 +3,7 @@ name: Pipelines
 on: [ push ]
 
 jobs:
-  build:
+  analysis:
     runs-on: ubuntu-latest
     name: Analysis
     steps:
