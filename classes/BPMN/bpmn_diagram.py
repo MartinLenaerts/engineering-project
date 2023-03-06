@@ -43,6 +43,20 @@ class BpmnDiagram:
                         events.append(element)
         return events
 
+    def get_all_elements_flat(self):
+        elements = []
+        for process in self.processes:
+            for element in process.elements:
+                elements.append(element)
+            for lane in process.lanes:
+                for element in lane.elements:
+                    elements.append(element)
+
+        for element in self.elements:
+            elements.append(element)
+
+        return elements
+
     def __str__(self):
         res = ""
         for process in self.processes:
@@ -54,5 +68,7 @@ class BpmnDiagram:
                 for element in lane.elements:
                     res += ("--------|----" + print_element(element) + "\n")
 
-        return res
+        for element in self.elements:
+            res += ("-" + print_element(element) + "\n")
 
+        return res
