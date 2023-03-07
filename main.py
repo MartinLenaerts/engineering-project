@@ -1,3 +1,6 @@
+import os
+import time
+
 import pydot
 
 from classes.BPMN.connecting.sequence_flow import SequenceFlow
@@ -5,7 +8,7 @@ from classes.BPMN.flow.activity.task import Task
 from classes.BPMN.flow.event.end_event import EndEvent
 from classes.BPMN.flow.event.intermediate_event import IntermediateEvent
 from classes.BPMN.flow.event.start_event import StartEvent
-from classes.BPMN.flow.gateway.event_based_gateway import EventBasedGateway
+from classes.BPMN.flow.gateway.gateway import Gateway
 from classes.PETRI.arc import Arc
 from classes.PETRI.petri_net import PetriNet
 from classes.PETRI.place import Place
@@ -13,19 +16,26 @@ from classes.PETRI.transition import Transition
 from utils.bpmn_functions import parse_bpmn_file
 
 
-def translate_bpmn_element(element, petri_net, place_id=0, already_translated=None):
-    if already_translated is None:
-        already_translated = []
-
+def translate_bpmn_element(element, petri_net, place_id, already_translated):
     petri_element = None
-    for (e, e_id) in already_translated:
-        if e_id == element.element_id:
-            return e
+
+    for (petri_element, bpmn_element) in already_translated:
+        if bpmn_element.element_id == element.element_id:
+            return petri_element
 
     if isinstance(element, StartEvent):
-        place = Place("p{}".format(place_id), element.element_id)
-        place_id += 1
-        petri_net.add_place(place)
+        place = None
+        for (_, e) in already_translated:
+            if isinstance(e, StartEvent):
+                for p in petri_net.places:
+                    if p.id == e.element_id:
+                        place = p
+
+        if place is None:
+            place = Place("p{}".format(element.element_id), element.element_id)
+            already_translated.append((place, element))
+            place_id += 1
+            petri_net.add_place(place)
 
         transition = Transition(element.name)
         petri_net.add_transition(transition)
@@ -33,26 +43,27 @@ def translate_bpmn_element(element, petri_net, place_id=0, already_translated=No
         arc = Arc(place, transition)
         petri_net.add_arc(arc)
 
-        target = translate_bpmn_element(element.outgoing_elements[0], petri_net, place_id, already_translated)
-
-        if target is None:
-            target = Place("None Place ! target of {}".format(element.element_id), 0)
+        target = translate_bpmn_element(element.outgoing_elements[0],
+                                        petri_net,
+                                        place_id,
+                                        already_translated
+                                        )
 
         arc = Arc(transition, target)
         petri_net.add_arc(arc)
 
     if isinstance(element, EndEvent):
-        placeEnd = Place("p{}".format(place_id), element.element_id)
+        place_end = Place("p{}".format(element.element_id), element.element_id)
         place_id += 1
-        petri_net.add_place(placeEnd)
+        petri_net.add_place(place_end)
 
         transition = Transition(element.name)
         petri_net.add_transition(transition)
 
-        arc = Arc(transition, placeEnd)
+        arc = Arc(transition, place_end)
         petri_net.add_arc(arc)
 
-        place = Place("p{}".format(place_id), element.element_id)
+        place = Place("p{}".format(element.element_id), element.element_id)
         place_id += 1
         petri_net.add_place(place)
 
@@ -60,18 +71,20 @@ def translate_bpmn_element(element, petri_net, place_id=0, already_translated=No
         petri_net.add_arc(arc)
 
         petri_element = place
+        already_translated.append((petri_element, element))
 
     if isinstance(element, SequenceFlow):
         petri_element = translate_bpmn_element(element.target, petri_net, place_id, already_translated)
 
-    if isinstance(element, Task):
-        place = Place("p{}".format(place_id), element.element_id)
+    if isinstance(element, Task) or isinstance(element, IntermediateEvent):
+        place = Place("p{}".format(element.element_id), element.element_id)
         place_id += 1
         petri_net.add_place(place)
 
         transition = Transition(element.name)
         petri_net.add_transition(transition)
         petri_element = place
+        already_translated.append((petri_element, element))
 
         arc = Arc(place, transition)
 
@@ -79,65 +92,40 @@ def translate_bpmn_element(element, petri_net, place_id=0, already_translated=No
 
         target = translate_bpmn_element(element.outgoing_elements[0], petri_net, place_id, already_translated)
 
-        if target is None:
-            target = Place("None Place ! target of {}".format(element.element_id), 0)
-
         arc = Arc(transition, target)
         petri_net.add_arc(arc)
 
-    if isinstance(element, EventBasedGateway):
-        place = Place("p{}".format(place_id), element.element_id)
+    if isinstance(element, Gateway):
+        place = Place("p{}".format(element.element_id), element.element_id)
         place_id += 1
         petri_net.add_place(place)
         petri_element = place
+        already_translated.append((petri_element, element))
 
         for out_element in element.outgoing_elements:
             target = translate_bpmn_element(out_element, petri_net, place_id, already_translated)
 
-            if target is None:
-                target = Place("None Place ! target of {}".format(element.element_id), 0)
-
             arc = Arc(place, target)
             petri_net.add_arc(arc)
-
-    if isinstance(element, IntermediateEvent):
-        place = Place("p{}".format(place_id), element.element_id)
-        place_id += 1
-        petri_net.add_place(place)
-
-        transition = Transition(element.name)
-        petri_net.add_transition(transition)
-        petri_element = place
-
-        arc = Arc(place, transition)
-
-        petri_net.add_arc(arc)
-
-        target = translate_bpmn_element(element.outgoing_elements[0], petri_net, place_id, already_translated)
-
-        if target is None:
-            target = Place("None Place ! target of {}".format(element.element_id), 0)
-
-        arc = Arc(transition, target)
-        petri_net.add_arc(arc)
-
-    if petri_element is None:
-        print(element.__class__.__name__)
-
-    already_translated.append((petri_element, element.element_id))
 
     return petri_element
 
 
-def bpmn_to_petri(bpmn):
+def bpmn_to_petri(bpmn, filename):
     elements = bpmn.get_start_event()
     petri_net = PetriNet()
+    already_translated = []
+    place_id = 0
 
-    translate_bpmn_element(elements[0], petri_net)
+    for start in elements:
+        translate_bpmn_element(start, petri_net, place_id, already_translated)
 
-    print(petri_net)
+    place_id = 0
+    for place in petri_net.places:
+        place.name = "p{}".format(place_id)
+        place_id += 1
 
-    petri_net_to_graph(petri_net, "temp.png")
+    petri_net_to_graph(petri_net, "{}{}.png".format(filename, time.time()))
 
 
 def petri_net_to_graph(petri_net, filename):
@@ -152,8 +140,14 @@ def petri_net_to_graph(petri_net, filename):
 
 
 if __name__ == '__main__':
-    bpmn_diagram = parse_bpmn_file('docs/bpmn/pizza-collaboration-light.bpmn')
+    dir_path = 'docs/bpmn/'
 
-    print(bpmn_diagram)
+    #bpmn_diagram = parse_bpmn_file('docs/bpmn/car.bpmn')
 
-    bpmn_to_petri(bpmn_diagram)
+    #bpmn_to_petri(bpmn_diagram, 'docs/petri/car')
+    for file in os.listdir(dir_path):
+        path = os.path.join(dir_path, file)
+        if os.path.isfile(path):
+            bpmn_diagram = parse_bpmn_file(path)
+
+            bpmn_to_petri(bpmn_diagram, 'docs/petri/{}'.format(file.replace('.bpmn', '')))

@@ -13,6 +13,7 @@ class BpmnXmlElement(Enum):
     OUTGOING = "{http://www.omg.org/spec/BPMN/20100524/MODEL}outgoing"
     MESSAGE_EVENT_DEFINITION = "{http://www.omg.org/spec/BPMN/20100524/MODEL}messageEventDefinition"
     PARALLEL_GATEWAY = "{http://www.omg.org/spec/BPMN/20100524/MODEL}parallelGateway"
+    EXCLUSIVE_GATEWAY = "{http://www.omg.org/spec/BPMN/20100524/MODEL}exclusiveGateway"
     INCOMING = "{http://www.omg.org/spec/BPMN/20100524/MODEL}incoming"
     INTERMEDIATE_CATCH_EVENT = "{http://www.omg.org/spec/BPMN/20100524/MODEL}intermediateCatchEvent"
     TASK = "{http://www.omg.org/spec/BPMN/20100524/MODEL}task"
@@ -24,3 +25,4 @@ class BpmnXmlElement(Enum):
     TIMEDATE = "{http://www.omg.org/spec/BPMN/20100524/MODEL}timeDate"
     COLLABORATION = "{http://www.omg.org/spec/BPMN/20100524/MODEL}collaboration"
     BPMN_DIAGRAM = "{http://www.omg.org/spec/BPMN/20100524/DI}BPMNDiagram"
+    SUB_PROCESS = "{http://www.omg.org/spec/BPMN/20100524/MODEL}subProcess"

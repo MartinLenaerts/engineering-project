@@ -1,16 +1,10 @@
-from utils.functions import get_id, get_name
+from classes.BPMN.flow.flow_object import FlowObject
 
 
-class Process:
-
+class SubProcess(FlowObject):
     def __init__(self, xml_element):
-        self.name = get_name(xml_element)
-        self.process_id = get_id(xml_element)
-        self.lanes = []
+        super().__init__(xml_element)
         self.elements = []
-
-    def append_lane(self, lane):
-        self.lanes.append(lane)
 
     def append_element(self, element):
         self.elements.append(element)
