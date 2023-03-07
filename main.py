@@ -125,7 +125,7 @@ def bpmn_to_petri(bpmn, filename):
         place.name = "p{}".format(place_id)
         place_id += 1
 
-    petri_net_to_graph(petri_net, "{}{}.png".format(filename, time.time()))
+    petri_net_to_graph(petri_net, "{}.png".format(filename))
 
 
 def petri_net_to_graph(petri_net, filename):
@@ -142,9 +142,6 @@ def petri_net_to_graph(petri_net, filename):
 if __name__ == '__main__':
     dir_path = 'docs/bpmn/'
 
-    #bpmn_diagram = parse_bpmn_file('docs/bpmn/car.bpmn')
-
-    #bpmn_to_petri(bpmn_diagram, 'docs/petri/car')
     for file in os.listdir(dir_path):
         path = os.path.join(dir_path, file)
         if os.path.isfile(path):

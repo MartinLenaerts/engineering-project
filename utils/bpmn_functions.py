@@ -33,7 +33,6 @@ def add_element_to_process(element, process):
 def find_source_and_target(xml_child, bpmn_diagram):
     source_ref = xml_child.attrib.get('sourceRef')
     target_ref = xml_child.attrib.get('targetRef')
-    print(source_ref, target_ref)
     target_found = False
     source_found = False
     target = None
@@ -85,7 +84,6 @@ def map_elements_of_process(process_xml, process, bpmn_diagram):
         if xml_child.tag == BpmnXmlElement.SUB_PROCESS.value:
             element = SubProcess(xml_child)
             map_elements_of_process(xml_child, element, element)
-            print(len(element.elements))
 
         if element is not None:
             add_element_to_process(element, process)
@@ -94,13 +92,11 @@ def map_elements_of_process(process_xml, process, bpmn_diagram):
 
         if xml_child.tag == BpmnXmlElement.SEQUENCE_FLOW.value:
             source, target = find_source_and_target(xml_child, bpmn_diagram)
-            print(source, target)
             flow = SequenceFlow(xml_child, source, target, 0)
             process.append_element(flow)
 
 
 def create_bpmn_diagram(xml):
-    print(xml)
     bpmn_diagram = BpmnDiagram()
 
     processes = xml.findall(BpmnXmlElement.PROCESS.value)
