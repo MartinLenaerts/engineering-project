@@ -1,6 +1,6 @@
 class Place:
-    def __init__(self, name):
-        self.id = id
+    def __init__(self, name, p_id):
+        self.id = p_id
         self.name = name
         self.tokens = 0
 
