@@ -1,14 +1,15 @@
 import os
-import time
 
 import pydot
 
+from classes.BPMN.connecting.message_flow import MessageFlow
 from classes.BPMN.connecting.sequence_flow import SequenceFlow
 from classes.BPMN.flow.activity.task import Task
 from classes.BPMN.flow.event.end_event import EndEvent
 from classes.BPMN.flow.event.intermediate_event import IntermediateEvent
 from classes.BPMN.flow.event.start_event import StartEvent
 from classes.BPMN.flow.gateway.gateway import Gateway
+from classes.BPMN.flow.sub_process import SubProcess
 from classes.PETRI.arc import Arc
 from classes.PETRI.petri_net import PetriNet
 from classes.PETRI.place import Place
@@ -24,20 +25,12 @@ def translate_bpmn_element(element, petri_net, place_id, already_translated):
             return petri_element
 
     if isinstance(element, StartEvent):
-        place = None
-        for (_, e) in already_translated:
-            if isinstance(e, StartEvent):
-                for p in petri_net.places:
-                    if p.id == e.element_id:
-                        place = p
+        place = Place("p{}".format(element.element_id), element.element_id)
+        already_translated.append((place, element))
+        place_id += 1
+        petri_net.add_place(place)
 
-        if place is None:
-            place = Place("p{}".format(element.element_id), element.element_id)
-            already_translated.append((place, element))
-            place_id += 1
-            petri_net.add_place(place)
-
-        transition = Transition(element.name)
+        transition = Transition(element.name, element.element_id)
         petri_net.add_transition(transition)
 
         arc = Arc(place, transition)
@@ -57,7 +50,7 @@ def translate_bpmn_element(element, petri_net, place_id, already_translated):
         place_id += 1
         petri_net.add_place(place_end)
 
-        transition = Transition(element.name)
+        transition = Transition(element.name, element.element_id)
         petri_net.add_transition(transition)
 
         arc = Arc(transition, place_end)
@@ -73,15 +66,18 @@ def translate_bpmn_element(element, petri_net, place_id, already_translated):
         petri_element = place
         already_translated.append((petri_element, element))
 
-    if isinstance(element, SequenceFlow):
+    if isinstance(element, SequenceFlow) or isinstance(element, MessageFlow):
         petri_element = translate_bpmn_element(element.target, petri_net, place_id, already_translated)
 
-    if isinstance(element, Task) or isinstance(element, IntermediateEvent):
+    if isinstance(element, Task) or isinstance(element, IntermediateEvent) or isinstance(element, SubProcess):
         place = Place("p{}".format(element.element_id), element.element_id)
         place_id += 1
         petri_net.add_place(place)
 
-        transition = Transition(element.name)
+        if isinstance(element, SubProcess):
+            transition = Transition(element.name, element.element_id, "yellow")
+        else:
+            transition = Transition(element.name, element.element_id)
         petri_net.add_transition(transition)
         petri_element = place
         already_translated.append((petri_element, element))
@@ -90,10 +86,12 @@ def translate_bpmn_element(element, petri_net, place_id, already_translated):
 
         petri_net.add_arc(arc)
 
-        target = translate_bpmn_element(element.outgoing_elements[0], petri_net, place_id, already_translated)
+        for e in element.outgoing_elements:
+            target = translate_bpmn_element(e, petri_net, place_id, already_translated)
+            arc = Arc(transition, target)
+            petri_net.add_arc(arc)
 
-        arc = Arc(transition, target)
-        petri_net.add_arc(arc)
+
 
     if isinstance(element, Gateway):
         place = Place("p{}".format(element.element_id), element.element_id)
@@ -133,18 +131,38 @@ def petri_net_to_graph(petri_net, filename):
     for place in petri_net.places:
         graph.add_node(pydot.Node(place.name, shape='circle'))
     for transition in petri_net.transitions:
-        graph.add_node(pydot.Node(transition.name, shape='box'))
+        name = transition.name
+        if name is None:
+            name = transition.id
+
+        text_color = "black"
+        if transition.color == "grey":
+            text_color = "white"
+
+        graph.add_node(pydot.Node(name, shape='box', style='filled', fillcolor=transition.color, fontcolor=text_color))
     for arc in petri_net.arcs:
-        graph.add_edge(pydot.Edge(arc.source.name, arc.target.name))
+        src_name = arc.source.name
+        trg_name = arc.target.name
+        if src_name is None:
+            src_name = arc.source.id
+        if trg_name is None:
+            trg_name = arc.target.id
+
+        graph.add_edge(pydot.Edge(src_name, trg_name))
     graph.write(path=filename, format="png")
 
 
 if __name__ == '__main__':
-    dir_path = 'docs/bpmn/'
+    dir_path = 'docs/bpmn/parts'
+    # bpmn_diagram = parse_bpmn_file(dir_path)
+    # print(bpmn_diagram)
+    # bpmn_to_petri(bpmn_diagram, 'docs/petri/payment')
 
     for file in os.listdir(dir_path):
         path = os.path.join(dir_path, file)
         if os.path.isfile(path):
-            bpmn_diagram = parse_bpmn_file(path)
+            if file == "starts_processes_ends.bpmn":
+                bpmn_diagram = parse_bpmn_file(path)
+                print(bpmn_diagram)
 
-            bpmn_to_petri(bpmn_diagram, 'docs/petri/{}'.format(file.replace('.bpmn', '')))
+                bpmn_to_petri(bpmn_diagram, 'docs/petri/parts/{}'.format(file.replace('.bpmn', '')))

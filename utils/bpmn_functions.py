@@ -12,7 +12,7 @@ from classes.BPMN.flow.gateway.parallel_gateway import ParallelGateway
 
 from classes.BPMN.lane import Lane
 from classes.BPMN.process import Process
-from classes.BPMN.sub_process import SubProcess
+from classes.BPMN.flow.sub_process import SubProcess
 from constant.bpmn_xml_elements import BpmnXmlElement
 from utils.functions import get_name
 
@@ -90,11 +90,11 @@ def map_elements_of_process(process_xml, process, bpmn_diagram):
         elif xml_child.tag != BpmnXmlElement.SEQUENCE_FLOW.value:
             print("⚠️ '{}' tag not found !".format(xml_child.tag))
 
-        if xml_child.tag == BpmnXmlElement.SEQUENCE_FLOW.value:
-            source, target = find_source_and_target(xml_child, bpmn_diagram)
-            flow = SequenceFlow(xml_child, source, target, 0)
-            process.append_element(flow)
-
+    sequences = process_xml.findall(BpmnXmlElement.SEQUENCE_FLOW.value)
+    for xml_sequence in sequences:
+        source, target = find_source_and_target(xml_sequence, bpmn_diagram)
+        flow = SequenceFlow(xml_sequence, source, target, 0)
+        process.append_element(flow)
 
 def create_bpmn_diagram(xml):
     bpmn_diagram = BpmnDiagram()
