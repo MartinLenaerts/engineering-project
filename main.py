@@ -91,8 +91,6 @@ def translate_bpmn_element(element, petri_net, place_id, already_translated):
             arc = Arc(transition, target)
             petri_net.add_arc(arc)
 
-
-
     if isinstance(element, Gateway):
         place = Place("p{}".format(element.element_id), element.element_id)
         place_id += 1
@@ -152,17 +150,27 @@ def petri_net_to_graph(petri_net, filename):
     graph.write(path=filename, format="png")
 
 
-if __name__ == '__main__':
-    dir_path = 'docs/bpmn/parts'
-    # bpmn_diagram = parse_bpmn_file(dir_path)
-    # print(bpmn_diagram)
-    # bpmn_to_petri(bpmn_diagram, 'docs/petri/payment')
-
+def get_files_from_dir(dir_path):
+    res = []
     for file in os.listdir(dir_path):
         path = os.path.join(dir_path, file)
         if os.path.isfile(path):
-            if file == "starts_processes_ends.bpmn":
-                bpmn_diagram = parse_bpmn_file(path)
-                print(bpmn_diagram)
+            file_name, file_extension = os.path.splitext(path)
+            if file_extension == ".bpmn":
+                res.append(path)
+        elif os.path.isdir(path):
+            res = res + get_files_from_dir(path)
 
-                bpmn_to_petri(bpmn_diagram, 'docs/petri/parts/{}'.format(file.replace('.bpmn', '')))
+    return res
+
+
+if __name__ == '__main__':
+    dir_path = 'docs/bpmn'
+
+    print(get_files_from_dir(dir_path))
+    for path in get_files_from_dir(dir_path):
+        file_name, file_extension = os.path.splitext(path)
+
+        bpmn_diagram = parse_bpmn_file(path)
+        print(bpmn_diagram)
+        bpmn_to_petri(bpmn_diagram, file_name.replace('/bpmn', '/petri'))
