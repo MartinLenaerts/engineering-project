@@ -10,6 +10,7 @@ from classes.PETRI.arc import Arc
 from classes.PETRI.petri_net import PetriNet
 from classes.PETRI.place import Place
 from classes.PETRI.transition import Transition
+from utils.petri_functions import petri_net_to_graph
 
 
 def translate_bpmn_element(element, petri_net, place_id, already_translated):
