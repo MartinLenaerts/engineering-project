@@ -8,6 +8,7 @@ from classes.BPMN.flow.event.end_event import EndEvent
 from classes.BPMN.flow.event.intermediate_event import IntermediateEvent
 from classes.BPMN.flow.event.start_event import StartEvent
 from classes.BPMN.flow.gateway.event_based_gateway import EventBasedGateway
+from classes.BPMN.flow.gateway.exclusive_gateway import ExclusiveGateway
 from classes.BPMN.flow.gateway.parallel_gateway import ParallelGateway
 
 from classes.BPMN.lane import Lane
@@ -74,7 +75,7 @@ def map_elements_of_process(process_xml, process, bpmn_diagram):
         if xml_child.tag == BpmnXmlElement.PARALLEL_GATEWAY.value:
             element = ParallelGateway(xml_child)
         if xml_child.tag == BpmnXmlElement.EXCLUSIVE_GATEWAY.value:
-            element = ParallelGateway(xml_child)
+            element = ExclusiveGateway(xml_child)
         if xml_child.tag == BpmnXmlElement.EVENT_BASED_GATEWAY.value:
             element = EventBasedGateway(xml_child)
         if xml_child.tag == BpmnXmlElement.INTERMEDIATE_CATCH_EVENT.value:

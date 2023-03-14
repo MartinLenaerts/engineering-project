@@ -37,4 +37,4 @@ jobs:
           pip install pydot
       - name: Launch tests
         run: |
-          python3.7 -m unittest tests
+          python3.7 -m unittest tests/*
