@@ -2,7 +2,7 @@
 
 ### BPMN Diagram
 
-#### Files Architecture: 
+#### Files Architecture:
 
 ##### Classes:
 
@@ -13,10 +13,10 @@
 - 📄 [bpmn_element.py](classes%2FBPMN%2Fbpmn_element.py)
 - 📄 [bpmn_diagram.py](classes%2FBPMN%2Fbpmn_diagram.py)
 
-- 📁 Flow: 
+- 📁 Flow:
     - 📄 [flow_object.py](classes%2FBPMN%2Fflow%2Fflow_object.py)
 
-    - 📁 gateway: 
+    - 📁 gateway:
 
         - 📄 [parallel_gateway.py](classes%2FBPMN%2Fflow%2Fgateway%2Fparallel_gateway.py)
         - 📄 [inclusive_gateway.py](classes%2FBPMN%2Fflow%2Fgateway%2Finclusive_gateway.py)
@@ -24,7 +24,7 @@
         - 📄 [exclusive_gateway.py](classes%2FBPMN%2Fflow%2Fgateway%2Fexclusive_gateway.py)
         - 📄 [event_based_gateway.py](classes%2FBPMN%2Fflow%2Fgateway%2Fevent_based_gateway.py)
 
-    - 📁 event: 
+    - 📁 event:
 
         - 📄 [start_event.py](classes%2FBPMN%2Fflow%2Fevent%2Fstart_event.py)
         - 📄 [intermediate_event.py](classes%2FBPMN%2Fflow%2Fevent%2Fintermediate_event.py)
@@ -49,4 +49,13 @@
 - 📄 [place.py](classes%2FPETRI%2Fplace.py)
 - 📄 [transition.py](classes%2FPETRI%2Ftransition.py)
 
+## Tests
 
+``` shell
+./tests.sh
+```
+
+
+## Ressources
+
+- https://scholar.cu.edu.eg/?q=imanhelal/files/is333_mis_lab8_2013.pdf

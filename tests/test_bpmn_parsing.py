@@ -12,12 +12,15 @@ from utils.bpmn_functions import parse_bpmn_file
 
 
 class TestBPMNParsing(unittest.TestCase):
+    bpmn_dir = "docs/bpmn/"
 
     def assert_elements(self, elements, expected):
         elements_clone = elements.copy()
 
         for i in range(len(elements)):
             for element_expected in expected:
+                if "count" not in element_expected:
+                    element_expected["count"] = 0
                 if isinstance(elements[i], element_expected["class"]) and (
                         element_expected["count"] < element_expected["expected_count"]):
                     del elements_clone[0]
@@ -28,78 +31,78 @@ class TestBPMNParsing(unittest.TestCase):
                              "Missing {} element".format(element_expected["class"].__name__))
 
     def test_start_task_end(self):
-        diagram = parse_bpmn_file("docs/bpmn/parts/start_task_end.bpmn")
+        diagram = parse_bpmn_file(self.bpmn_dir + "parts/start_task_end.bpmn")
         self.assertEqual(len(diagram.processes), 1)
         self.assertEqual(len(diagram.processes[0].elements), 5)
 
         expected_elements = [
-            {"class": StartEvent, "count": 0, "expected_count": 1},
-            {"class": EndEvent, "count": 0, "expected_count": 1},
-            {"class": Task, "count": 0, "expected_count": 1},
-            {"class": SequenceFlow, "count": 0, "expected_count": 2},
+            {"class": StartEvent, "expected_count": 1},
+            {"class": EndEvent, "expected_count": 1},
+            {"class": Task, "expected_count": 1},
+            {"class": SequenceFlow, "expected_count": 2},
         ]
 
         self.assert_elements(diagram.processes[0].elements, expected_elements)
 
     def test_start_decision_tasks_ends(self):
-        diagram = parse_bpmn_file("docs/bpmn/parts/start_decision_tasks_ends.bpmn")
+        diagram = parse_bpmn_file(self.bpmn_dir + "parts/start_decision_tasks_ends.bpmn")
         self.assertEqual(len(diagram.processes), 1)
         self.assertEqual(len(diagram.processes[0].elements), 11)
 
         expected_elements = [
-            {"class": StartEvent, "count": 0, "expected_count": 1},
-            {"class": EndEvent, "count": 0, "expected_count": 2},
-            {"class": Task, "count": 0, "expected_count": 2},
-            {"class": SequenceFlow, "count": 0, "expected_count": 5},
-            {"class": ExclusiveGateway, "count": 0, "expected_count": 1},
+            {"class": StartEvent, "expected_count": 1},
+            {"class": EndEvent, "expected_count": 2},
+            {"class": Task, "expected_count": 2},
+            {"class": SequenceFlow, "expected_count": 5},
+            {"class": ExclusiveGateway, "expected_count": 1},
         ]
 
         self.assert_elements(diagram.processes[0].elements, expected_elements)
 
     def test_starts_merge_task_end(self):
-        diagram = parse_bpmn_file("docs/bpmn/parts/starts_merge_task_end.bpmn")
+        diagram = parse_bpmn_file(self.bpmn_dir + "parts/starts_merge_task_end.bpmn")
         self.assertEqual(len(diagram.processes), 1)
         self.assertEqual(len(diagram.processes[0].elements), 9)
 
         expected_elements = [
-            {"class": StartEvent, "count": 0, "expected_count": 2},
-            {"class": EndEvent, "count": 0, "expected_count": 1},
-            {"class": Task, "count": 0, "expected_count": 1},
-            {"class": SequenceFlow, "count": 0, "expected_count": 4},
-            {"class": ExclusiveGateway, "count": 0, "expected_count": 1},
+            {"class": StartEvent, "expected_count": 2},
+            {"class": EndEvent, "expected_count": 1},
+            {"class": Task, "expected_count": 1},
+            {"class": SequenceFlow, "expected_count": 4},
+            {"class": ExclusiveGateway, "expected_count": 1},
         ]
 
         self.assert_elements(diagram.processes[0].elements, expected_elements)
 
     def test_starts_processes_ends(self):
-        diagram = parse_bpmn_file("docs/bpmn/parts/starts_processes_ends.bpmn")
+        diagram = parse_bpmn_file(self.bpmn_dir + "parts/starts_processes_ends.bpmn")
         self.assertEqual(len(diagram.processes), 2)
         elements = diagram.get_all_elements_flat()
         self.assertEqual(len(elements), 11)
 
         expected_elements = [
-            {"class": StartEvent, "count": 0, "expected_count": 2},
-            {"class": EndEvent, "count": 0, "expected_count": 2},
-            {"class": Task, "count": 0, "expected_count": 2},
-            {"class": SequenceFlow, "count": 0, "expected_count": 4},
-            {"class": MessageFlow, "count": 0, "expected_count": 1},
+            {"class": StartEvent, "expected_count": 2},
+            {"class": EndEvent, "expected_count": 2},
+            {"class": Task, "expected_count": 2},
+            {"class": SequenceFlow, "expected_count": 4},
+            {"class": MessageFlow, "expected_count": 1},
         ]
 
         self.assert_elements(elements, expected_elements)
 
     def test_application(self):
-        diagram = parse_bpmn_file("docs/bpmn/application.bpmn")
+        diagram = parse_bpmn_file(self.bpmn_dir + "application.bpmn")
         self.assertEqual(len(diagram.processes), 1)
         self.assertEqual(len(diagram.processes[0].elements), 26)
 
         expected_elements = [
-            {"class": StartEvent, "count": 0, "expected_count": 1},
-            {"class": EndEvent, "count": 0, "expected_count": 2},
-            {"class": Task, "count": 0, "expected_count": 5},
-            {"class": SequenceFlow, "count": 0, "expected_count": 13},
-            {"class": ExclusiveGateway, "count": 0, "expected_count": 2},
-            {"class": EventBasedGateway, "count": 0, "expected_count": 1},
-            {"class": IntermediateEvent, "count": 0, "expected_count": 2},
+            {"class": StartEvent, "expected_count": 1},
+            {"class": EndEvent, "expected_count": 2},
+            {"class": Task, "expected_count": 5},
+            {"class": SequenceFlow, "expected_count": 13},
+            {"class": ExclusiveGateway, "expected_count": 2},
+            {"class": EventBasedGateway, "expected_count": 1},
+            {"class": IntermediateEvent, "expected_count": 2},
         ]
 
         self.assert_elements(diagram.processes[0].elements, expected_elements)
