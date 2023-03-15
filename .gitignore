@@ -1,8 +1,7 @@
-Documents
 venv
 .DS_Store
 .idea
 **/*.pyc
 **/*/__pycache__
-logs
+cache
 .coverage

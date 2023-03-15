@@ -8,7 +8,7 @@ from utils.functions import get_files_from_dir
 from utils.petri_functions import petri_net_to_graph
 from utils.translation_functions import bpmn_to_petri
 
-logging.basicConfig(filename="logs/main.log", level=logging.INFO)
+logging.basicConfig(filename="cache/logs/main.log", level=logging.INFO)
 
 
 def get_args(argv):
@@ -16,7 +16,7 @@ def get_args(argv):
     filename = None
     for opt, arg in opts:
         if opt == '-h':
-            logging.info('main.py -f <bpmn file name>')
+            logging.info('main.py -f <bpmn_diagrams file name>')
             sys.exit()
         elif opt in ("-f", "--filename"):
             filename = arg
@@ -27,7 +27,7 @@ def get_args(argv):
 
 if __name__ == '__main__':
     logging.info("\r\n\r\n################## New Execution ##################")
-    dir_path = 'docs/bpmn'
+    dir_path = 'resources/bpmn_diagrams'
 
     filename_arg = get_args(sys.argv[1:])
     for path in get_files_from_dir(dir_path):
@@ -42,9 +42,9 @@ if __name__ == '__main__':
             logging.info("{} file parsed".format(filename_without_ext))
             petri_net = bpmn_to_petri(bpmn_diagram)
 
-            logging.info("{} petri net generated".format(filename_without_ext))
+            logging.info("{} petri_output net generated".format(filename_without_ext))
 
-            img_path = "{}.png".format(file_name.replace('/bpmn', '/petri'))
+            img_path = "{}.png".format(file_name.replace(dir_path, 'cache/petri_output'))
             petri_net_to_graph(petri_net, img_path)
 
-            logging.info("{} petri net save in png ({})".format(filename_without_ext, img_path))
+            logging.info("{} petri_output net save in png ({})".format(filename_without_ext, img_path))

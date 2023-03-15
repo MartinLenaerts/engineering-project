@@ -10,6 +10,7 @@ def petri_net_to_graph(petri_net, filename):
         if name is None:
             name = transition.id
 
+        print(name)
         text_color = "black"
         if transition.color == "grey":
             text_color = "white"
@@ -25,3 +26,5 @@ def petri_net_to_graph(petri_net, filename):
 
         graph.add_edge(pydot.Edge(src_name, trg_name))
     graph.write(path=filename, format="png")
+
+
