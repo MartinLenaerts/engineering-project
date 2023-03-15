@@ -2,6 +2,7 @@ import os
 
 from utils.bpmn_functions import parse_bpmn_file
 from utils.functions import get_files_from_dir
+from utils.petri_functions import petri_net_to_graph
 from utils.translation_functions import bpmn_to_petri
 
 if __name__ == '__main__':
@@ -13,4 +14,6 @@ if __name__ == '__main__':
 
         bpmn_diagram = parse_bpmn_file(path)
         print(bpmn_diagram)
-        bpmn_to_petri(bpmn_diagram, file_name.replace('/bpmn', '/petri'))
+        petri_net = bpmn_to_petri(bpmn_diagram)
+
+        petri_net_to_graph(petri_net, "{}.png".format(file_name.replace('/bpmn', '/petri')))
