@@ -19,7 +19,7 @@ jobs:
           pip install pydot
       - name: mypy
         run: |
-          mypy classes/**/*.py
+          mypy **/*.py
   tests:
     runs-on: ubuntu-latest
     name: Tests

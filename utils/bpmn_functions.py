@@ -1,3 +1,4 @@
+import logging
 from xml.etree import ElementTree
 
 from classes.BPMN.bpmn_diagram import BpmnDiagram
@@ -89,13 +90,14 @@ def map_elements_of_process(process_xml, process, bpmn_diagram):
         if element is not None:
             add_element_to_process(element, process)
         elif xml_child.tag != BpmnXmlElement.SEQUENCE_FLOW.value:
-            print("⚠️ '{}' tag not found !".format(xml_child.tag))
+            logging.warning("⚠️ '{}' tag not found !".format(xml_child.tag))
 
     sequences = process_xml.findall(BpmnXmlElement.SEQUENCE_FLOW.value)
     for xml_sequence in sequences:
         source, target = find_source_and_target(xml_sequence, bpmn_diagram)
         flow = SequenceFlow(xml_sequence, source, target, 0)
         process.append_element(flow)
+
 
 def create_bpmn_diagram(xml):
     bpmn_diagram = BpmnDiagram()
