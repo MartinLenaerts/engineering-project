@@ -103,7 +103,7 @@ def translate_bpmn_element(element, petri_net, place_id, already_translated):
     return petri_element
 
 
-def bpmn_to_petri(bpmn, filename):
+def bpmn_to_petri(bpmn):
     elements = bpmn.get_start_event()
     petri_net = PetriNet()
     already_translated = []
@@ -117,4 +117,4 @@ def bpmn_to_petri(bpmn, filename):
         place.name = "p{}".format(place_id)
         place_id += 1
 
-    petri_net_to_graph(petri_net, "{}.png".format(filename))
+    return petri_net
