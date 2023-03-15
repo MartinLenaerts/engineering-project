@@ -3,13 +3,14 @@ from classes.BPMN.flow.flow_object import FlowObject
 
 
 def print_element(element):
-    res = str(element.name) + " [" + str(element.element_id) + "] "
+    res = "{} [{}] ".format(element.name, element.element_id)
 
     if isinstance(element, FlowObject):
-        res += " (in: " + str(len(element.incoming_elements)) + " , out: " + str(len(element.outgoing_elements)) + ")"
+        res += " (in: {}  , out: {} )".format(len(element.incoming_elements), len(element.outgoing_elements))
 
     if isinstance(element, Connection):
-        res += "Connection (in: " + str(element.source.element_id) + " , out: " + str(element.target.element_id) + ")"
+        res += "{} (in: {}  , out: {} )".format(element.__class__.__name__, element.source.name,
+                                                element.target.name)
 
     return res
 
