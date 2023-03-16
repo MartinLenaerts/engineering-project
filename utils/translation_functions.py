@@ -4,7 +4,6 @@ from classes.BPMN.flow.activity.task import Task
 from classes.BPMN.flow.event.end_event import EndEvent
 from classes.BPMN.flow.event.intermediate_event import IntermediateEvent
 from classes.BPMN.flow.event.start_event import StartEvent
-from classes.BPMN.flow.gateway.event_based_gateway import EventBasedGateway
 from classes.BPMN.flow.gateway.exclusive_gateway import ExclusiveGateway
 from classes.BPMN.flow.gateway.parallel_gateway import ParallelGateway
 from classes.BPMN.flow.sub_process import SubProcess
@@ -64,12 +63,19 @@ def translate_bpmn_element(element, petri_net, already_translated, source=None):
 
         if isinstance(element, SubProcess):
             transition = Transition(element.name, element.element_id, petri_net, "yellow")
+            sub_petri_net = PetriNet()
+            sub_already_translated = []
+            for sub_element in element.get_start_event():
+                translate_bpmn_element(sub_element, sub_petri_net, sub_already_translated)
+
+            petri_net.add_sub_net(sub_petri_net)
         else:
             transition = Transition(element.name, element.element_id, petri_net)
         petri_elements = []
 
         for in_element in element.incoming_elements:
             place = Place("p{}".format(in_element.element_id), in_element.element_id, petri_net)
+
             if source["element_id"] == in_element.element_id:
                 petri_element = place
 
@@ -131,7 +137,7 @@ def bpmn_to_petri(bpmn):
         translate_bpmn_element(start, petri_net, already_translated)
 
     place_id = 0
-    for place in petri_net.places:
+    for place in petri_net.get_all_places():
         place.name = "{}".format(place_id)
         place_id += 1
 

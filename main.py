@@ -2,11 +2,12 @@ import getopt
 import logging
 import os
 import sys
+import traceback
 
 from utils.bpmn_functions import parse_bpmn_file
 from utils.env import load_and_check_env
 from utils.utils_functions import get_files_from_dir
-from utils.petri_functions import petri_net_to_graph
+from utils.petri_functions import petri_net_to_img
 from utils.translation_functions import bpmn_to_petri
 
 logs_file, petri_output_dir = load_and_check_env()
@@ -37,17 +38,24 @@ if __name__ == '__main__':
         file_name, file_extension = os.path.splitext(path)
         filename_without_ext, _ = os.path.splitext(os.path.basename(file_name))
         if filename_arg is None or filename_without_ext == filename_arg:
-            logging.info("\r\n !!!!!! file : {} !!!!!! ".format(path))
+            try:
+                logging.info("\r\n !!!!!! file : {} !!!!!! ".format(path))
 
-            bpmn_diagram = parse_bpmn_file(path)
+                bpmn_diagram = parse_bpmn_file(path)
 
-            logging.info("{} file parsed".format(filename_without_ext))
-            petri_net = bpmn_to_petri(bpmn_diagram)
+                logging.info("{} file parsed".format(filename_without_ext))
+                petri_net = bpmn_to_petri(bpmn_diagram)
 
-            logging.info("{} petri net generated".format(filename_without_ext))
+                logging.info("{} petri net generated".format(filename_without_ext))
 
-            img_path = "{}.png".format(file_name.replace(dir_path, petri_output_dir))
-            os.makedirs(os.path.dirname(img_path), exist_ok=True)
-            petri_net_to_graph(petri_net, img_path)
+                img_path = "{}.png".format(file_name.replace(dir_path, petri_output_dir))
+                os.makedirs(os.path.dirname(img_path), exist_ok=True)
+                petri_net_to_img(petri_net, img_path)
 
-            logging.info("{} petri net save in png ({})".format(filename_without_ext, img_path))
+                logging.info("✅ {} petri net save in png ({}) ✅".format(filename_without_ext, img_path))
+            except Exception as e:
+                msg = "‼️ Error in {} file, Message : {}  file : ‼️".format(filename_without_ext, e)
+                logging.error(msg)
+                logging.error(traceback.format_exc())
+                print(msg)
+
