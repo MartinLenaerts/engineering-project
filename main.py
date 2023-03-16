@@ -5,7 +5,7 @@ import sys
 
 from utils.bpmn_functions import parse_bpmn_file
 from utils.env import load_and_check_env
-from utils.functions import get_files_from_dir
+from utils.utils_functions import get_files_from_dir
 from utils.petri_functions import petri_net_to_graph
 from utils.translation_functions import bpmn_to_petri
 
