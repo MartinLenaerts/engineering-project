@@ -1,1 +1,0 @@
-rm -rf tests/__pycache__ && python3.7 -m unittest tests/*

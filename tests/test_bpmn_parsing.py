@@ -12,7 +12,7 @@ from utils.bpmn_functions import parse_bpmn_file
 
 
 class TestBPMNParsing(unittest.TestCase):
-    bpmn_dir = "docs/bpmn/"
+    bpmn_dir = "resources/bpmn_diagrams/"
 
     def assert_elements(self, elements, expected):
         elements_clone = elements.copy()

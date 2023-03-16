@@ -16,7 +16,7 @@ from classes.BPMN.lane import Lane
 from classes.BPMN.process import Process
 from classes.BPMN.flow.sub_process import SubProcess
 from constant.bpmn_xml_elements import BpmnXmlElement
-from utils.functions import get_name
+from utils.utils_functions import get_name
 
 
 def add_element_to_process(element, process):

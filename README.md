@@ -6,7 +6,7 @@
 
 ##### Classes:
 
-![bpmn.png](docs/img/bpmn_classes.png)
+![bpmn.png](resources/img/bpmn_classes.png)
 
 - 📄 [process.py](classes%2FBPMN%2Fprocess.py)
 - 📄 [lane.py](classes%2FBPMN%2Flane.py)
@@ -42,7 +42,7 @@
 
 ### Petri Network
 
-![petri.png](docs/img/petri_classes.png)
+![petri.png](resources/img/petri_classes.png)
 
 - 📄 [arc.py](classes%2FPETRI%2Farc.py)
 - 📄 [petri_net.py](classes%2FPETRI%2Fpetri_net.py)
