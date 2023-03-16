@@ -4,6 +4,3 @@ venv
 **/*.pyc
 **/*/__pycache__
 cache
-.coverage
-.pytest_cache
-.mypy_cache
