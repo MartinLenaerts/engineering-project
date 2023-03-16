@@ -8,10 +8,10 @@ jobs:
     name: Analysis
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.7
+      - name: Set up Python 3.11.2
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.11.2
       - name: Install Dependencies
         run: |
           sudo apt-get install graphviz
@@ -33,4 +33,6 @@ jobs:
           sudo apt-get install graphviz
           pip install pydot coverage pytest
       - name: Launch tests
-        run:  make test
+        run: |  
+          make test
+          coverage report -m
