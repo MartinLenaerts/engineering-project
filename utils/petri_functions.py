@@ -1,10 +1,17 @@
 import pydot
 
 
-def petri_net_to_graph(petri_net, filename):
+def petri_net_to_img(petri_net, filename):
+    graph = petri_net_to_graph(petri_net)
+
+    graph.write(path=filename, format="png")
+
+
+def petri_net_to_graph(petri_net, graph=None):
     transition_name_mapping = []
     transition_count = 1
-    graph = pydot.Dot(rankdir='LR', margin=0.1)
+    if graph is None:
+        graph = pydot.Dot(rankdir='LR', margin=0.1)
     for place in petri_net.places:
         graph.add_node(pydot.Node(place.name, shape='circle', fontcolor="white"))
     for transition in petri_net.transitions:
@@ -33,4 +40,8 @@ def petri_net_to_graph(petri_net, filename):
                     trg_name = name_mapping["name"]
 
         graph.add_edge(pydot.Edge(src_name, trg_name))
-    graph.write(path=filename, format="png")
+
+    for sub_net in petri_net.sub_nets:
+        graph = petri_net_to_graph(sub_net, graph)
+
+    return graph
