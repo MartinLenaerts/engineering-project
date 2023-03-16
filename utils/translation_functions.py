@@ -4,6 +4,7 @@ from classes.BPMN.flow.activity.task import Task
 from classes.BPMN.flow.event.end_event import EndEvent
 from classes.BPMN.flow.event.intermediate_event import IntermediateEvent
 from classes.BPMN.flow.event.start_event import StartEvent
+from classes.BPMN.flow.gateway.event_based_gateway import EventBasedGateway
 from classes.BPMN.flow.gateway.exclusive_gateway import ExclusiveGateway
 from classes.BPMN.flow.gateway.parallel_gateway import ParallelGateway
 from classes.BPMN.flow.sub_process import SubProcess
@@ -58,10 +59,13 @@ def translate_bpmn_element(element, petri_net, already_translated, source=None):
     if isinstance(element, SequenceFlow) or isinstance(element, MessageFlow):
         petri_element = translate_bpmn_element(element.target, petri_net, already_translated,
                                                {"element_id": element.element_id})
-    if isinstance(element, Task) or isinstance(element, IntermediateEvent) or isinstance(element, SubProcess):
+    if isinstance(element, Task) or isinstance(element, IntermediateEvent) or \
+            isinstance(element, SubProcess) or isinstance(element, ParallelGateway):
 
-        transition = Transition(element.name, element.element_id, petri_net)
-
+        if isinstance(element, SubProcess):
+            transition = Transition(element.name, element.element_id, petri_net, "yellow")
+        else:
+            transition = Transition(element.name, element.element_id, petri_net)
         petri_elements = []
 
         for in_element in element.incoming_elements:
@@ -77,28 +81,6 @@ def translate_bpmn_element(element, petri_net, already_translated, source=None):
         for out_element in element.outgoing_elements:
             target = translate_bpmn_element(out_element, petri_net, already_translated,
                                             {"element_id": element.element_id})
-            Arc(transition, target, petri_net)
-
-    if isinstance(element, ParallelGateway):
-        transition = Transition(element.name, element.element_id, petri_net)
-
-        petri_elements = []
-
-        for in_element in element.incoming_elements:
-            place = Place("p{}".format(in_element.element_id), in_element.element_id, petri_net)
-
-            if source["element_id"] == in_element.element_id:
-                petri_element = place
-
-            Arc(place, transition, petri_net)
-            petri_elements.append(place)
-
-        already_translated.append((petri_elements, element))
-
-        for out_element in element.outgoing_elements:
-            target = translate_bpmn_element(out_element, petri_net, already_translated,
-                                            {"element_id": element.element_id})
-
             Arc(transition, target, petri_net)
 
     if isinstance(element, ExclusiveGateway):
