@@ -15,13 +15,9 @@ from classes.PETRI.transition import Transition
 
 
 def create_place_and_transition(bpmn_element, petri_net):
-    place = Place("p{}".format(bpmn_element.element_id), bpmn_element.element_id)
-    transition = Transition(bpmn_element.name, bpmn_element.element_id)
-    arc = Arc(place, transition)
-
-    petri_net.add_place(place)
-    petri_net.add_transition(transition)
-    petri_net.add_arc(arc)
+    place = Place("p{}".format(bpmn_element.element_id), bpmn_element.element_id, petri_net)
+    transition = Transition(bpmn_element.name, bpmn_element.element_id, petri_net)
+    Arc(place, transition, petri_net)
 
     return place, transition
 
@@ -45,107 +41,101 @@ def translate_bpmn_element(element, petri_net, already_translated, source=None):
 
         target = translate_bpmn_element(element.outgoing_elements[0],
                                         petri_net,
-                                        already_translated
-                                        )
+                                        already_translated,
+                                        {"element_id": element.element_id})
 
-        arc = Arc(transition, target)
-        petri_net.add_arc(arc)
+        Arc(transition, target, petri_net)
 
     if isinstance(element, EndEvent):
         place, transition = create_place_and_transition(element, petri_net)
         petri_element = place
 
-        place_end = Place("p{}".format(element.element_id), element.element_id)
-        petri_net.add_place(place_end)
-
-        arc = Arc(transition, place_end)
-        petri_net.add_arc(arc)
+        place_end = Place("p{}".format(element.element_id), element.element_id, petri_net)
+        Arc(transition, place_end, petri_net)
 
         already_translated.append((place, element))
 
     if isinstance(element, SequenceFlow) or isinstance(element, MessageFlow):
         petri_element = translate_bpmn_element(element.target, petri_net, already_translated,
                                                {"element_id": element.element_id})
-
     if isinstance(element, Task) or isinstance(element, IntermediateEvent) or isinstance(element, SubProcess):
 
-        place, transition = create_place_and_transition(element, petri_net)
-        already_translated.append((place, element))
-
-        petri_element = place
-
-        for e in element.outgoing_elements:
-            target = translate_bpmn_element(e, petri_net, already_translated)
-            arc = Arc(transition, target)
-            petri_net.add_arc(arc)
-
-    if isinstance(element, ParallelGateway):
-        transition = Transition(element.name, element.element_id)
-        petri_net.add_transition(transition)
-        first = True
+        transition = Transition(element.name, element.element_id, petri_net)
 
         petri_elements = []
 
         for in_element in element.incoming_elements:
-            place = Place("p{}".format(in_element.element_id), in_element.element_id)
-            petri_net.add_place(place)
-            if first is True:
+            place = Place("p{}".format(in_element.element_id), in_element.element_id, petri_net)
+            if source["element_id"] == in_element.element_id:
                 petri_element = place
-                first = False
-            arc = Arc(place, transition)
-            petri_net.add_arc(arc)
+
+            petri_elements.append(place)
+            Arc(place, transition, petri_net)
+
+        already_translated.append((petri_elements, element))
+
+        for out_element in element.outgoing_elements:
+            target = translate_bpmn_element(out_element, petri_net, already_translated,
+                                            {"element_id": element.element_id})
+            Arc(transition, target, petri_net)
+
+    if isinstance(element, ParallelGateway):
+        transition = Transition(element.name, element.element_id, petri_net)
+
+        petri_elements = []
+
+        for in_element in element.incoming_elements:
+            place = Place("p{}".format(in_element.element_id), in_element.element_id, petri_net)
+
+            if source["element_id"] == in_element.element_id:
+                petri_element = place
+
+            Arc(place, transition, petri_net)
             petri_elements.append(place)
 
         already_translated.append((petri_elements, element))
 
         for out_element in element.outgoing_elements:
-            target = translate_bpmn_element(out_element, petri_net, already_translated)
+            target = translate_bpmn_element(out_element, petri_net, already_translated,
+                                            {"element_id": element.element_id})
 
-            arc = Arc(transition, target)
-            petri_net.add_arc(arc)
+            Arc(transition, target, petri_net)
 
     if isinstance(element, ExclusiveGateway):
         more_entry = len(element.incoming_elements) > len(element.outgoing_elements)
 
         if more_entry:
-            out_place = translate_bpmn_element(element.outgoing_elements[0], petri_net, already_translated)
-            first = True
+            out_place = translate_bpmn_element(element.outgoing_elements[0], petri_net, already_translated,
+                                               {"element_id": element.element_id})
+
             petri_elements = []
             for in_element in element.incoming_elements:
-                place = Place("p{}".format(in_element.element_id), in_element.element_id)
-                petri_net.add_place(place)
+                place = Place("p{}".format(in_element.element_id), in_element.element_id, petri_net)
 
-                if first is True:
+                if source["element_id"] == in_element.element_id:
                     petri_element = place
-                    first = False
 
                 petri_elements.append(place)
 
-                transition = Transition(in_element.name, in_element.element_id)
-                petri_net.add_transition(transition)
+                transition = Transition(in_element.name, in_element.element_id, petri_net)
 
-                arc_place_tr = Arc(place, transition)
-                petri_net.add_arc(arc_place_tr)
+                Arc(place, transition, petri_net)
 
-                arc = Arc(transition, out_place)
-                petri_net.add_arc(arc)
+                Arc(transition, out_place, petri_net)
             already_translated.append((petri_elements, element))
         else:
-            place = Place("p{}".format(element.element_id), element.element_id)
-            petri_net.add_place(place)
+            place = Place("p{}".format(element.element_id), element.element_id, petri_net)
             petri_element = place
             already_translated.append((place, element))
 
             for out_element in element.outgoing_elements:
-                transition = Transition(out_element.name, out_element.element_id)
-                petri_net.add_transition(transition)
-                arc_p_tr = Arc(place, transition)
-                petri_net.add_arc(arc_p_tr)
+                transition = Transition(out_element.name, out_element.element_id, petri_net)
+                Arc(place, transition, petri_net)
 
-                target = translate_bpmn_element(out_element, petri_net, already_translated)
+                target = translate_bpmn_element(out_element, petri_net, already_translated,
+                                                {"element_id": element.element_id})
 
-                arc = Arc(transition, target)
-                petri_net.add_arc(arc)
+                Arc(transition, target, petri_net)
 
     return petri_element
 
