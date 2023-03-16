@@ -31,6 +31,6 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get install graphviz
-          pip install pydot coverage
+          pip install pydot coverage pytest
       - name: Launch tests
         run:  make test
