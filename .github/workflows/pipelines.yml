@@ -35,4 +35,4 @@ jobs:
       - name: Launch tests
         run: |  
           make test
-          coverage report -m
+          coverage report -m --data-file=cache/coverage/data
