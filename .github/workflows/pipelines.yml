@@ -17,23 +17,20 @@ jobs:
           sudo apt-get install graphviz
           pip install mypy
       - name: mypy
-        run: |
-          mypy **/*.py
+        run: make analysis
   tests:
     runs-on: ubuntu-latest
     name: Tests
     needs: analysis
     steps:
       - uses: actions/checkout@v1
-      - name: Set up Python 3.7
+      - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.11
       - name: Install Dependencies
         run: |
           sudo apt-get install graphviz
           pip install pydot coverage
       - name: Launch tests
-        run: |
-          coverage  run -m pytest tests -v
-          coverage report -m
+        run:  make test
