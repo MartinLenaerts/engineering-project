@@ -35,5 +35,5 @@ jobs:
           pip install mypy pydot coverage
       - name: Launch tests
         run: |
-          coverage run -m unittest tests/*
+          coverage run -m unittest discover
           coverage report -m

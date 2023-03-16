@@ -14,4 +14,4 @@ class Place(PetriElement):
         self.tokens -= 1
 
     def __str__(self):
-        return self.name
+        return {"name": self.name, "id": self.id}.__str__()

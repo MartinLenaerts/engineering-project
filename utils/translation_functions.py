@@ -4,6 +4,7 @@ from classes.BPMN.flow.activity.task import Task
 from classes.BPMN.flow.event.end_event import EndEvent
 from classes.BPMN.flow.event.intermediate_event import IntermediateEvent
 from classes.BPMN.flow.event.start_event import StartEvent
+from classes.BPMN.flow.gateway.exclusive_gateway import ExclusiveGateway
 from classes.BPMN.flow.gateway.parallel_gateway import ParallelGateway
 from classes.BPMN.flow.sub_process import SubProcess
 from classes.PETRI.arc import Arc
@@ -103,6 +104,49 @@ def translate_bpmn_element(element, petri_net, already_translated, source=None):
             arc = Arc(transition, target)
             petri_net.add_arc(arc)
 
+    if isinstance(element, ExclusiveGateway):
+        more_entry = len(element.incoming_elements) > len(element.outgoing_elements)
+
+        if more_entry:
+            out_place = translate_bpmn_element(element.outgoing_elements[0], petri_net, already_translated)
+            first = True
+            petri_elements = []
+            for in_element in element.incoming_elements:
+                place = Place("p{}".format(in_element.element_id), in_element.element_id)
+                petri_net.add_place(place)
+
+                if first is True:
+                    petri_element = place
+                    first = False
+
+                petri_elements.append(place)
+
+                transition = Transition(in_element.name, in_element.element_id)
+                petri_net.add_transition(transition)
+
+                arc_place_tr = Arc(place, transition)
+                petri_net.add_arc(arc_place_tr)
+
+                arc = Arc(transition, out_place)
+                petri_net.add_arc(arc)
+            already_translated.append((petri_elements, element))
+        else:
+            place = Place("p{}".format(element.element_id), element.element_id)
+            petri_net.add_place(place)
+            petri_element = place
+            already_translated.append((place, element))
+
+            for out_element in element.outgoing_elements:
+                transition = Transition(out_element.name, out_element.element_id)
+                petri_net.add_transition(transition)
+                arc_p_tr = Arc(place, transition)
+                petri_net.add_arc(arc_p_tr)
+
+                target = translate_bpmn_element(out_element, petri_net, already_translated)
+
+                arc = Arc(transition, target)
+                petri_net.add_arc(arc)
+
     return petri_element
 
 
@@ -116,7 +160,7 @@ def bpmn_to_petri(bpmn):
 
     place_id = 0
     for place in petri_net.places:
-        place.name = "p{}".format(place_id)
+        place.name = "{}".format(place_id)
         place_id += 1
 
     return petri_net

@@ -7,3 +7,8 @@ class Arc(PetriElement):
         self.target = target
 
         self.weight = weight
+
+    def __str__(self) -> str:
+        return {"source": self.source.__str__(), "target": self.target.__str__()}.__str__()
+
+

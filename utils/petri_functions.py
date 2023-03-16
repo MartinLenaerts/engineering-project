@@ -20,10 +20,8 @@ def petri_net_to_graph(petri_net, filename):
             text_color = "white"
 
         graph.add_node(pydot.Node(name, shape='box', style='filled', fillcolor=transition.color, fontcolor=text_color))
-    print(transition_name_mapping)
     for arc in petri_net.arcs:
         src_name = arc.source.name
-        print(src_name)
         trg_name = arc.target.name
         if src_name is None:
             for name_mapping in transition_name_mapping:

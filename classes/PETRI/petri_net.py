@@ -11,18 +11,7 @@ class PetriNet:
         self.transitions.append(transition)
 
     def add_arc(self, arc):
-        already_exist = False
-        source = arc.source.name
-        target = arc.target.name
-        for current_arc in self.arcs:
-            if current_arc.source.name == source and current_arc.target.name == target:
-                already_exist = True
-
-        if not already_exist:
-            self.arcs.append(arc)
-            return True
-
-        return False
+        self.arcs.append(arc)
 
     def __str__(self):
         return "Petri Net with {} places, {} transitions, {} arcs".format(len(self.places),
