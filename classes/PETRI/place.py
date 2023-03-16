@@ -1,4 +1,7 @@
-class Place:
+from classes.PETRI.petri_element import PetriElement
+
+
+class Place(PetriElement):
     def __init__(self, name, p_id):
         self.id = p_id
         self.name = name

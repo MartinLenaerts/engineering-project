@@ -33,11 +33,9 @@ if __name__ == '__main__':
     dir_path = 'resources/bpmn_diagrams'
 
     filename_arg = get_args(sys.argv[1:])
-    print(get_files_from_dir(dir_path))
     for path in get_files_from_dir(dir_path):
         file_name, file_extension = os.path.splitext(path)
         filename_without_ext, _ = os.path.splitext(os.path.basename(file_name))
-        print(filename_without_ext, filename_arg)
         if filename_arg is None or filename_without_ext == filename_arg:
             logging.info("\r\n !!!!!! file : {} !!!!!! ".format(path))
 
