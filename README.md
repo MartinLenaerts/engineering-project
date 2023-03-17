@@ -39,4 +39,6 @@ make test-coverage
 
 ## Ressources
 
-- https://scholar.cu.edu.eg/?q=imanhelal/files/is333_mis_lab8_2013.pdf
+![mapping_table.png](resources%2Fimg%2Fmapping_table.png)
+
+- https://www.researchgate.net/publication/27467826_Formal_Semantics_and_Automated_Analysis_of_BPMN_Process_Models
