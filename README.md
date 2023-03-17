@@ -1,6 +1,7 @@
 ## Engineering Project
 
 ## Examples
+<div style="background: white">
 
 |                                              bpmn                                              |                                              petri                                              |
 |:----------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------:|
@@ -11,6 +12,7 @@
 |     ![starts_merge_task_end.svg](resources%2Fimg%2Fbpmn_parts%2Fstarts_merge_task_end.svg)     |     ![starts_merge_task_end.png](resources%2Fimg%2Fpetri_parts%2Fstarts_merge_task_end.png)     |
 |     ![starts_processes_ends.svg](resources%2Fimg%2Fbpmn_parts%2Fstarts_processes_ends.svg)     |     ![starts_processes_ends.png](resources%2Fimg%2Fpetri_parts%2Fstarts_processes_ends.png)     |
 
+</div>
 ### BPMN Diagram
 
 #### Files Architecture:
@@ -26,7 +28,13 @@
 ## Tests
 
 ``` shell
-./tests.sh
+make test
+```
+
+or if you want the code coverage 
+
+``` shell
+make test-coverage
 ```
 
 ## Ressources
