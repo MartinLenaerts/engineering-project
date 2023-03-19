@@ -42,3 +42,4 @@ make test-coverage
 ![mapping_table.png](resources%2Fimg%2Fmapping_table.png)
 
 - https://www.researchgate.net/publication/27467826_Formal_Semantics_and_Automated_Analysis_of_BPMN_Process_Models
+- http://didattica.cs.unicam.it/old/lib/exe/fetch.php?media=didattica:magistrale:ebpm:ay_1819:slide_11_-_mapping_from_bpmn_to_petrinets.pdf

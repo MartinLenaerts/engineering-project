@@ -54,8 +54,6 @@ if __name__ == '__main__':
 
                 logging.info("✅ {} petri net save in png ({}) ✅".format(filename_without_ext, img_path))
             except Exception as e:
-                msg = "‼️ Error in {} file, Message : {}  file : ‼️".format(filename_without_ext, e)
-                logging.error(msg)
+                logging.error("‼️ Error in {} file, Message : '{}' ‼️".format(filename_without_ext, e))
                 logging.error(traceback.format_exc())
-                print(msg)
 

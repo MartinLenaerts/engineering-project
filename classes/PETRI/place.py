@@ -7,6 +7,9 @@ class Place(PetriElement):
         self.name = name
         self.tokens = 0
         self.petri_net = petri_net
+        for p in petri_net.places:
+            if p.name == name:
+                raise Exception("❗ '{}' place already exist ! ❗️".format(name))
         self.petri_net.add_place(self)
 
     def add_token(self):

@@ -9,6 +9,9 @@ class Transition(PetriElement):
         self.id = t_id
         self.color = color
         self.petri_net = petri_net
+        for t in petri_net.transitions:
+            if (t.name == name and name is not None) or (self.id == t.id):
+                raise Exception("❗ ( name : {}, id : {} ) transition already exist ! ❗️".format(self.name, self.id))
         self.petri_net.add_transition(self)
 
     def __str__(self):

@@ -1,28 +1,34 @@
 from enum import Enum
 
 
+def get_clean_name(element_name):
+    return element_name.replace(BpmnXmlElement.PREFIX.value, "")
+
+
 class BpmnXmlElement(Enum):
-    MESSAGE = "{http://www.omg.org/spec/BPMN/20100524/MODEL}message"
-    MESSAGE_FLOW = "{http://www.omg.org/spec/BPMN/20100524/MODEL}messageFlow"
-    PARTICIPANT = "{http://www.omg.org/spec/BPMN/20100524/MODEL}participant"
-    PROCESS = "{http://www.omg.org/spec/BPMN/20100524/MODEL}process"
-    LANE_SET = "{http://www.omg.org/spec/BPMN/20100524/MODEL}laneSet"
-    LANE = "{http://www.omg.org/spec/BPMN/20100524/MODEL}lane"
-    FLOW_NODE_REF = "{http://www.omg.org/spec/BPMN/20100524/MODEL}flowNodeRef"
-    START_EVENT = "{http://www.omg.org/spec/BPMN/20100524/MODEL}startEvent"
-    OUTGOING = "{http://www.omg.org/spec/BPMN/20100524/MODEL}outgoing"
-    MESSAGE_EVENT_DEFINITION = "{http://www.omg.org/spec/BPMN/20100524/MODEL}messageEventDefinition"
-    PARALLEL_GATEWAY = "{http://www.omg.org/spec/BPMN/20100524/MODEL}parallelGateway"
-    EXCLUSIVE_GATEWAY = "{http://www.omg.org/spec/BPMN/20100524/MODEL}exclusiveGateway"
-    INCOMING = "{http://www.omg.org/spec/BPMN/20100524/MODEL}incoming"
-    INTERMEDIATE_CATCH_EVENT = "{http://www.omg.org/spec/BPMN/20100524/MODEL}intermediateCatchEvent"
-    TASK = "{http://www.omg.org/spec/BPMN/20100524/MODEL}task"
-    END_EVENT = "{http://www.omg.org/spec/BPMN/20100524/MODEL}endEvent"
-    TERMINATE_EVENT_DEFINITION = "{http://www.omg.org/spec/BPMN/20100524/MODEL}terminateEventDefinition"
-    SEQUENCE_FLOW = "{http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow"
-    EVENT_BASED_GATEWAY = "{http://www.omg.org/spec/BPMN/20100524/MODEL}eventBasedGateway"
-    TIMER_EVENT_DEFINITION = "{http://www.omg.org/spec/BPMN/20100524/MODEL}timerEventDefinition"
-    TIMEDATE = "{http://www.omg.org/spec/BPMN/20100524/MODEL}timeDate"
-    COLLABORATION = "{http://www.omg.org/spec/BPMN/20100524/MODEL}collaboration"
+    PREFIX = "{http://www.omg.org/spec/BPMN/20100524/MODEL}"
+
+    MESSAGE = "{}message".format(PREFIX)
+    MESSAGE_FLOW = "{}messageFlow".format(PREFIX)
+    PARTICIPANT = "{}participant".format(PREFIX)
+    PROCESS = "{}process".format(PREFIX)
+    LANE_SET = "{}laneSet".format(PREFIX)
+    LANE = "{}lane".format(PREFIX)
+    FLOW_NODE_REF = "{}flowNodeRef".format(PREFIX)
+    START_EVENT = "{}startEvent".format(PREFIX)
+    OUTGOING = "{}outgoing".format(PREFIX)
+    MESSAGE_EVENT_DEFINITION = "{}messageEventDefinition".format(PREFIX)
+    PARALLEL_GATEWAY = "{}parallelGateway".format(PREFIX)
+    EXCLUSIVE_GATEWAY = "{}exclusiveGateway".format(PREFIX)
+    INCOMING = "{}incoming".format(PREFIX)
+    INTERMEDIATE_CATCH_EVENT = "{}intermediateCatchEvent".format(PREFIX)
+    TASK = "{}task".format(PREFIX)
+    END_EVENT = "{}endEvent".format(PREFIX)
+    TERMINATE_EVENT_DEFINITION = "{}terminateEventDefinition".format(PREFIX)
+    SEQUENCE_FLOW = "{}sequenceFlow".format(PREFIX)
+    EVENT_BASED_GATEWAY = "{}eventBasedGateway".format(PREFIX)
+    TIMER_EVENT_DEFINITION = "{}timerEventDefinition".format(PREFIX)
+    TIMEDATE = "{}timeDate".format(PREFIX)
+    COLLABORATION = "{}collaboration".format(PREFIX)
     BPMN_DIAGRAM = "{http://www.omg.org/spec/BPMN/20100524/DI}BPMNDiagram"
-    SUB_PROCESS = "{http://www.omg.org/spec/BPMN/20100524/MODEL}subProcess"
+    SUB_PROCESS = "{}subProcess".format(PREFIX)

@@ -6,28 +6,28 @@
     <bpmn:messageFlow id="Flow_0la850o" sourceRef="Activity_0zh3k5o" targetRef="Activity_15gaxyk" />
   </bpmn:collaboration>
   <bpmn:process id="Process_0hzavrl" isExecutable="false">
-    <bpmn:startEvent id="StartEvent_0ovgo6o" name="start 1">
+    <bpmn:startEvent id="StartEvent_0ovgo6o">
       <bpmn:outgoing>Flow_1ty9rex</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="Activity_0zh3k5o" name="task 1">
       <bpmn:incoming>Flow_1ty9rex</bpmn:incoming>
       <bpmn:outgoing>Flow_0mzicgx</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="Event_19i9985" name="end 1">
+    <bpmn:endEvent id="Event_19i9985">
       <bpmn:incoming>Flow_0mzicgx</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1ty9rex" sourceRef="StartEvent_0ovgo6o" targetRef="Activity_0zh3k5o" />
     <bpmn:sequenceFlow id="Flow_0mzicgx" sourceRef="Activity_0zh3k5o" targetRef="Event_19i9985" />
   </bpmn:process>
   <bpmn:process id="Process_0vv2a29">
-    <bpmn:startEvent id="Event_0z4p8uw" name="start 2">
+    <bpmn:startEvent id="Event_0z4p8uw">
       <bpmn:outgoing>Flow_151vvp5</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="Activity_15gaxyk" name="task 2">
       <bpmn:incoming>Flow_151vvp5</bpmn:incoming>
       <bpmn:outgoing>Flow_1ezgev7</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="Event_0wnq9at" name="end 2">
+    <bpmn:endEvent id="Event_0wnq9at">
       <bpmn:incoming>Flow_1ezgev7</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_151vvp5" sourceRef="Event_0z4p8uw" targetRef="Activity_15gaxyk" />
