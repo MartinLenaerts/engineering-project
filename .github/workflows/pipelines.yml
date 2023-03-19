@@ -4,9 +4,8 @@ on: [ push ]
 
 concurrency:
   group: ${{ github.ref }}
-
-
   cancel-in-progress: true
+
 jobs:
   analysis:
     runs-on: ubuntu-latest
@@ -38,6 +37,6 @@ jobs:
           sudo apt-get install graphviz
           pip install pydot coverage pytest
       - name: Launch tests
-        run: |  
+        run: |
           make test
           coverage report -m --data-file=cache/coverage/data
