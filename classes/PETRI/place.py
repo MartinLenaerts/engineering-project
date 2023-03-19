@@ -3,6 +3,7 @@ from classes.PETRI.petri_element import PetriElement
 
 class Place(PetriElement):
     def __init__(self, name, p_id, petri_net):
+        super().__init__()
         self.id = p_id
         self.name = name
         self.tokens = 0
@@ -20,3 +21,6 @@ class Place(PetriElement):
 
     def __str__(self):
         return {"name": self.name, "id": self.id}.__str__()
+
+    def to_text(self):
+        return "#place p{} \n".format(self.name)

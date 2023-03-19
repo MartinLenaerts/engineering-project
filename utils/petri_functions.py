@@ -45,3 +45,16 @@ def petri_net_to_graph(petri_net, graph=None):
         graph = petri_net_to_graph(sub_net, graph)
 
     return graph
+
+
+def petri_net_to_text(petri_net, filename):
+    io = open(filename, "w")
+
+    for place in petri_net.places:
+        io.writelines(place.to_text())
+
+    io.writelines("\n")
+    for transition in petri_net.transitions:
+        io.writelines(transition.to_text() + "\n")
+
+    io.close()
