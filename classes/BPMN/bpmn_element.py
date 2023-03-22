@@ -1,4 +1,4 @@
-from utils.utils_functions import get_id, get_name
+from utils.xml_functions import get_id, get_name
 
 
 class BPMNElement:
