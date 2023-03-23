@@ -43,6 +43,7 @@ jobs:
   deployment:
     name: deploy
     runs-on: ubuntu-latest
+    needs: tests
     steps:
       - name: execute
         uses: appleboy/ssh-action@v0.1.8
