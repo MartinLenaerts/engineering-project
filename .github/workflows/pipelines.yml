@@ -41,18 +41,18 @@ jobs:
           make test
           coverage report -m --data-file=cache/coverage/data
   deployment:
-  name: deploy
-  runs-on: ubuntu-latest
-  steps:
-    - name: execute
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        script: |
-          rm -rf python-translation
-          git clone git@github.com:MartinLenaerts/engineering-project.git python-translation
-          cd python-translation
-          git checkout main
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: execute
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            rm -rf python-translation
+            git clone git@github.com:MartinLenaerts/engineering-project.git python-translation
+            cd python-translation
+            git checkout main
