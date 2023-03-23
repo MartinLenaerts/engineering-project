@@ -1,7 +1,12 @@
 include .env
+OS = $(shell uname -s)
 
 last-logs:
+ifeq "$(OS)" "Darwin"
 	tail -r ${LOGS_FILE} | awk '/New Execution/{exit} /^CRITICAL|INFO/ {print}' | tail -r
+else
+	tac ${LOGS_FILE} | awk '/New Execution/{exit} /^CRITICAL|INFO/ {print}' | tac
+endif
 
 translate: # translate all diagrams
 	python3 main.py
