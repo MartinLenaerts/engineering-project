@@ -1,8 +1,7 @@
-import getopt
 import logging
 import os
-import sys
 import traceback
+import argparse
 
 from utils.bpmn_functions import parse_bpmn_file
 from utils.petri_functions import petri_net_to_text, petri_net_to_img
@@ -76,21 +75,19 @@ def parse_and_translate(filename_arg, output_type, output_dir):
         parse_and_translate_from_file(filename_arg, output_type, output_dir)
 
 
-def get_args(argv):
-    opts, args = getopt.getopt(argv, "hf:o:k", ["filename=", "output="])
-    filename = None
-    output = None
-    keep = False
-    for opt, arg in opts:
-        if opt == '-h':
-            print('main.py -f <bpmn_diagrams file name> -o <output type (png or txt)>')
-            sys.exit()
-        elif opt in ("-f", "--filename"):
-            filename = arg
-        elif opt in ("-o", "--output"):
-            output = arg
-        elif opt in ("-k", "--keep"):
-            keep = True
-    logging.debug('Arguments ==>  filename: {}, output: {}, keep: {}'.format(filename, output, keep))
+def get_args(petri_output_dir):
+    parser = argparse.ArgumentParser(description="Script to translate bpmn diagram to petri net")
 
-    return filename, output, keep
+    parser.add_argument('-f', '--filename', action='store', dest='filename', default=None,
+                        help='BPMN file to translate (.bpmn file), if this argument is not given all the files in the '
+                             'folder "resources/bpmn_diagrams" will be translated')
+    parser.add_argument('-o', '--output', action='store', dest='output', default=None,
+                        help='output type (png or txt)')
+    parser.add_argument('-k', '--keep', action='store', dest='keep', default=False,
+                        help='Save the output file(s) in the same location as the .bpmn file. If "False", the file(s) '
+                             'will be saved here: "{}"'.format(petri_output_dir))
+
+    args = parser.parse_args()
+    logging.debug('Arguments ==>  filename: {}, output: {}, keep: {}'.format(args.filename, args.output, args.keep))
+
+    return args
