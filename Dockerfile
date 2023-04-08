@@ -5,6 +5,5 @@ WORKDIR /home/app
 
 COPY . .
 
-RUN python3 -m pip install pydot mypy
-RUN mypy **/*.py
+RUN python3 -m pip install -r requirements.txt
 ENTRYPOINT ["python3", "main.py"]
