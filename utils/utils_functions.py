@@ -78,14 +78,14 @@ def parse_and_translate(filename_arg, output_type, output_dir):
 def get_args(petri_output_dir):
     parser = argparse.ArgumentParser(description="Script to translate bpmn diagram to petri net")
 
-    parser.add_argument('-f', '--filename', action='store', dest='filename', default=None,
-                        help='BPMN file to translate (.bpmn file), if this argument is not given all the files in the '
+    parser.add_argument('-f', '--filename', action='store', dest='filename', default=None, type=str,
+                        help='BPMN file to translate (.bpmn file), if this argument is not given, all the files in the '
                              'folder "resources/bpmn_diagrams" will be translated')
-    parser.add_argument('-o', '--output', action='store', dest='output', default=None,
+    parser.add_argument('-o', '--output', action='store', dest='output', default=None, type=str, choices=['png', 'txt'],
                         help='output type (png or txt)')
-    parser.add_argument('-k', '--keep', action='store', dest='keep', default=False,
-                        help='Save the output file(s) in the same location as the .bpmn file. If "False", the file(s) '
-                             'will be saved here: "{}"'.format(petri_output_dir))
+    parser.add_argument('--keep', action='store_true', dest='keep',
+                        help='Save the output file(s) in the same location as the .bpmn file. if this argument is not '
+                             'given, the file(s) will be saved here: "{}"'.format(petri_output_dir))
 
     args = parser.parse_args()
     logging.debug('Arguments ==>  filename: {}, output: {}, keep: {}'.format(args.filename, args.output, args.keep))

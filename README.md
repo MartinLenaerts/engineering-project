@@ -11,7 +11,7 @@ pip install -r requirement.txt
 ### With `Python`
 
 ```
-usage: main.py [-h] [-f FILENAME] [-o OUTPUT] [-k KEEP]
+usage: main.py [-h] [-f FILENAME] [-o {png,txt}] [--keep]
 
 Script to translate bpmn diagram to petri net
 
@@ -19,13 +19,13 @@ options:
   -h, --help            show this help message and exit
   -f FILENAME, --filename FILENAME
                         BPMN file to translate (.bpmn file), if this argument
-                        is not given all the files in the folder
+                        is not given, all the files in the folder
                         "resources/bpmn_diagrams" will be translated
-  -o OUTPUT, --output OUTPUT
+  -o {png,txt}, --output {png,txt}
                         output type (png or txt)
-  -k KEEP, --keep KEEP  Save the output file(s) in the same location as the
-                        .bpmn file. If "False", the file(s) will be saved
-                        here: "cache/petri_output"
+  --keep                Save the output file(s) in the same location as the
+                        .bpmn file. if this argument is not given, the file(s)
+                        will be saved here: "cache/petri_output"
 ```
 
 ### With `Docker`
